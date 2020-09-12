@@ -1,14 +1,21 @@
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react'
 import Splash from './Pages/Splash/Splash'
-import SignIn from './Pages/SignIn/SignIn'
+import SideNavbar from './Component/Navbar/SideNav/SideNavbar';
 
-export class App extends Component {
-  render() {
-    return (
-      // <Splash />
-      <SignIn />
-    )
+const App = () => {
+  const [splash, setsplash] = useState(true)
+
+  useEffect(()=>{
+    setTimeout(()=>{
+      setsplash(false)
+    },5000)
+  },[])
+
+  if(splash){
+    return(<Splash/>)
+  }else{
+    return(<SideNavbar/>)
   }
 }
 

@@ -41,7 +41,7 @@ export class SignIn extends Component {
                         value={this.state.password} />
                     <TouchableOpacity 
                         style={style.signin}
-                        onPress={c=>this.setState({...this.state, val:c})}
+                        onPress={()=>this.props.navigation.navigate('MyDrawer')}
                         >
                         <Text style={{fontSize:20}}>Sign In</Text>
                     </TouchableOpacity>
