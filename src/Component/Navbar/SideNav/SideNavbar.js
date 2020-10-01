@@ -25,10 +25,9 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
        <View style={{alignItems:"center"}}>
-        <Avatar.Text size={100} label="NW" style={{backgroundColor:"#E6E6E6", margin:20}} />
+        <Avatar.Image source={require('../../../Assets/img/BMKG.png')} size={90} style={{margin:20}} />
        </View>
        <View style={{alignItems:"center", marginBottom:20}}>
-        <Text style={{color:"#fff", letterSpacing:1}}>Nanda Winata</Text>
         <Text style={{color:"#fff", letterSpacing:1}}>Stamet Soetta</Text>
        </View>
       <DrawerItemList {...props} />

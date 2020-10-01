@@ -11,7 +11,7 @@ const Header = ({navigasi, judul, subjudul, isi}) => (
             <StatusBar backgroundColor={'#334753'} />
             <Appbar.Action size={38} icon="menu" onPress={() => {navigasi.openDrawer()}} />
             <Appbar.Content title={judul} titleStyle={{letterSpacing:2}} subtitle={subjudul} />
-            <Avatar.Text size={50} label="NW" style={{backgroundColor:"#E6E6E6", marginRight:10}} />
+            <Avatar.Image size={45} source={require('../../../Assets/img/BMKG.png')} style={{ marginRight:10}} />
         </Appbar.Header>
         <View style={{margin:15}}>
             {isi}
