@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, Image, StatusBar, Dimensions, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import Logo from '../../Assets/icons/Logo.png'
 import Axios from 'axios'
+import { GlobalConsumer } from '../../Component/Context/Context';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -44,6 +45,7 @@ export class SignIn extends Component {
                         style={style.signin}
                         onPress={()=>{
                             // login(this.state)
+                            
                             const body = {
                                 "username":this.state.username,
                                 "password":this.state.password
@@ -54,8 +56,11 @@ export class SignIn extends Component {
                                         headers:{'Authorization':`Bearer ${dat.data.token}`}
                                         })
                                         .then((c)=>{
-                                            console.log(c.data.success)
+                                            // console.log(c.data.success)
+                                            
                                             if (c.data.success==1){
+                                                this.props.updateValue({username:this.state.username})
+                                                this.props.updateValue({data:c.data.data})
                                                 return(this.props.navigation.navigate('MyDrawer'))
                                             } else{
                                                 return(
@@ -112,4 +117,4 @@ const style = StyleSheet.create({
     }
 })
 
-export default SignIn
+export default GlobalConsumer(SignIn)

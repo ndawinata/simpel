@@ -2,6 +2,7 @@
 // import moment from 'moment'
 import React, { Component, createContext } from 'react'
 import { Alert } from 'react-native'
+import moment from 'moment'
 // var parseString = require('react-native-xml2js').parseString;
 
 
@@ -14,26 +15,74 @@ const GlobalProvider = (Children) => {
         class ParentComp extends Component {
             state = {
                 visible:false,
-                coba:'Dashboard',
-                alat:''
+                alat:'',
+                data:{},
+                dWaktu:'',
+                dMerek:'',
+                dKondisi:'',
+                dTahun:'',
+                username:''
             }
-
+            updateValue = (val) =>{
+                // this.setState({...this.state, coba:val.coba})
+                this.setState({...this.state, username:val.username})
+                this.setState({...this.state, data:val.data})
+            }
             dispatch = (action) =>{
                 switch(action.type){
+                    case 'coba':
+                        this.setState({...this.state, coba:action.value})
+                        break
                     case 'hiddenDialog':
                         this.setState({...this.state, visible:false})
                         break
                     case 'radar':
-                        this.setState({...this.state, alat:'Radar', visible:true})
+                        const dat = this.state.data.filter( element => element.alat =="Radar")[this.state.data.filter( element => element.alat =="Radar").length-1]
+                        this.setState({
+                            ...this.state, 
+                            alat:'Radar', 
+                            visible:true, 
+                            dWaktu:moment(dat.waktu).format('lll'),
+                            dMerek:dat.merek,
+                            dKondisi:dat.kondisi,
+                            dTahun:dat.tahun
+                        })
                         break
                     case 'awos':
-                        this.setState({...this.state, alat:'Awos', visible:true})
+                        const dat1 = this.state.data.filter( element => element.alat =="AWOS")[this.state.data.filter( element => element.alat =="AWOS").length-1]
+                        this.setState({
+                            ...this.state, 
+                            alat:'AWOS', 
+                            visible:true, 
+                            dWaktu:moment(dat1.waktu).format('lll'),
+                            dMerek:dat1.merek,
+                            dKondisi:dat1.kondisi,
+                            dTahun:dat1.tahun
+                        })
                         break
                     case 'digitalisasi':
-                        this.setState({...this.state, alat:'Digitalisasi', visible:true})
+                        const dat2 = this.state.data.filter( element => element.alat =="Digitalisasi")[this.state.data.filter( element => element.alat =="Digitalisasi").length-1]
+                        this.setState({
+                            ...this.state, 
+                            alat:'Digitalisasi', 
+                            visible:true, 
+                            dWaktu:moment(dat2.waktu).format('lll'),
+                            dMerek:dat2.merek,
+                            dKondisi:dat2.kondisi,
+                            dTahun:dat2.tahun
+                        })
                         break
                     case 'radiosonde':
-                        this.setState({...this.state, alat:'Radiosonde', visible:true})
+                        const dat3 = this.state.data.filter( element => element.alat =="Radiosonde")[this.state.data.filter( element => element.alat =="Radiosonde").length-1]
+                        this.setState({
+                            ...this.state, 
+                            alat:'Radiosonde', 
+                            visible:true, 
+                            // dWaktu:moment(dat3.waktu).format('lll'),
+                            // dMerek:dat3.merek,
+                            // dKondisi:dat3.kondisi,
+                            // dTahun:dat3.tahun
+                        })
                         break
                     default :
                         this.setState({...this.state})
@@ -50,7 +99,8 @@ const GlobalProvider = (Children) => {
                     <Provider value={
                         {
                             state:this.state,
-                            dispatch:this.dispatch
+                            dispatch:this.dispatch,
+                            updateValue:this.updateValue
                         }
                     }>
                         <Children {...this.props} />

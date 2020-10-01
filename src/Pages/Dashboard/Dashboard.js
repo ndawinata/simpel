@@ -3,9 +3,24 @@ import { Text, StyleSheet, View } from 'react-native'
 import Header from '../../Component/Navbar/Header/Header'
 import { List, Badge, Button, Paragraph, Dialog, Portal } from 'react-native-paper';
 import { GlobalConsumer } from '../../Component/Context/Context';
+import moment from 'moment'
+import Digitalisasi from '../Digitalisasi/Digitalisasi';
+
+const warna = (c) =>{
+    switch(c) {
+        case 'ON':
+            return('green')
+            break;
+        case 'OFF':
+            return('red')
+            break;
+        default:
+            return('red')
+    } 
+}
 
 const isian = (c) =>{
-    // console.log(c.state)
+    // console.log(c)
     return(
         <View style={{marginHorizontal:10}}>
             <Text style={styles.tanggal}>Tuesday, 2 January 2020</Text>
@@ -17,7 +32,7 @@ const isian = (c) =>{
                     return(
                         <View style={{flexDirection:"row"}}>
                             <List.Icon {...props} icon="chevron-right" />
-                            <Badge size={32} style={{fontSize:14, backgroundColor:"green", position:'absolute',right:-18,top:-18}}>ON</Badge>
+                            <Badge size={32} style={{fontSize:14, backgroundColor:`${warna(c.radar.kondisi)}`, position:'absolute',right:-18,top:-18}}>{c.radar.kondisi}</Badge>
                         </View>
                     )}
                 }
@@ -33,7 +48,7 @@ const isian = (c) =>{
                     return(
                         <View style={{flexDirection:"row"}}>
                             <List.Icon {...props} icon="chevron-right" />
-                            <Badge size={32} style={{fontSize:14, backgroundColor:"green", position:'absolute',right:-18,top:-18}}>ON</Badge>
+                            <Badge size={32} style={{fontSize:14, backgroundColor:`${warna(c.awos.kondisi)}`, position:'absolute',right:-18,top:-18}}>{c.awos.kondisi}</Badge>
                         </View>
                     )}
                 }
@@ -49,7 +64,7 @@ const isian = (c) =>{
                     return(
                         <View style={{flexDirection:"row"}}>
                             <List.Icon {...props} icon="chevron-right" />
-                            <Badge size={32} style={{fontSize:14, backgroundColor:"green", position:'absolute',right:-18,top:-18}}>ON</Badge>
+                            <Badge size={32} style={{fontSize:14, backgroundColor:`${warna(c.digitalisasi.kondisi)}`, position:'absolute',right:-18,top:-18}}>{c.digitalisasi.kondisi}</Badge>
                         </View>
                     )}
                 }
@@ -65,7 +80,7 @@ const isian = (c) =>{
                     return(
                         <View style={{flexDirection:"row"}}>
                             <List.Icon {...props} icon="chevron-right" />
-                            <Badge size={32} style={{fontSize:14, backgroundColor:"red", position:'absolute',right:-18,top:-18}}>OFF</Badge>
+                            <Badge size={32} style={{fontSize:14, backgroundColor:`${warna('OFF')}`, position:'absolute',right:-18,top:-18}}>OFF</Badge>
                         </View>
                     )}
                 }
@@ -78,19 +93,30 @@ const isian = (c) =>{
 }
 
 class Dashboard extends Component {
-
+    state={
+        radar:this.props.state.data.filter( element => element.alat =="Radar")[this.props.state.data.filter( element => element.alat =="Radar").length-1],
+        awos:this.props.state.data.filter( element => element.alat =="AWOS")[this.props.state.data.filter( element => element.alat =="AWOS").length-1],
+        digitalisasi:this.props.state.data.filter( element => element.alat =="Digitalisasi")[this.props.state.data.filter( element => element.alat =="Digitalisasi").length-1],
+        // radiosonde:this.props.state.data.filter( element => element.alat =="Radar")[this.props.state.data.filter( element => element.alat =="Radar").length-1]
+        // radiosonde:this.props.state.data.filter( element => element.alat =="Radar")[this.props.state.data.filter( element => element.alat =="Radar").length-1]
+    }
+    
     render() {
+        
         return (
             <View>
                 <Portal>
                     <Dialog visible={this.props.state.visible} onDismiss={()=>{this.props.dispatch({type:'hiddenDialog'})}}>
                         <Dialog.Title>{this.props.state.alat}</Dialog.Title>
                         <Dialog.Content>
-                        <Paragraph>This is simple dialog</Paragraph>
+                        <Paragraph>Waktu   : {this.props.state.dWaktu}</Paragraph>
+                        <Paragraph>Merek   : {this.props.state.dMerek}</Paragraph>
+                        <Paragraph>Kondisi : {this.props.state.dKondisi}</Paragraph>
+                        <Paragraph>Tahun   : {this.props.state.dTahun}</Paragraph>
                         </Dialog.Content>
                     </Dialog>
                 </Portal>
-                <Header judul={this.props.state.coba} subjudul="Stamet Soetta" isi={isian(this.props)} navigasi={this.props.navigation}/>
+                <Header judul={'Dashboard'} subjudul={this.props.state.data[0].statsiun} isi={isian(this.state)} navigasi={this.props.navigation}/>
             </View>
         )
     }
