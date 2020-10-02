@@ -3,8 +3,6 @@ import { Text, StyleSheet, View } from 'react-native'
 import Header from '../../Component/Navbar/Header/Header'
 import { List, Badge, Button, Paragraph, Dialog, Portal } from 'react-native-paper';
 import { GlobalConsumer } from '../../Component/Context/Context';
-import moment from 'moment'
-import Digitalisasi from '../Digitalisasi/Digitalisasi';
 
 const warna = (c) =>{
     switch(c) {
@@ -20,7 +18,8 @@ const warna = (c) =>{
 }
 
 const isian = (c) =>{
-    // console.log(c)
+    // console.log(c.props.state)
+    // console.log(c.state)
     return(
         <View style={{marginHorizontal:10}}>
             <Text style={styles.tanggal}>Tuesday, 2 January 2020</Text>
@@ -32,12 +31,12 @@ const isian = (c) =>{
                     return(
                         <View style={{flexDirection:"row"}}>
                             <List.Icon {...props} icon="chevron-right" />
-                            <Badge size={32} style={{fontSize:14, backgroundColor:`${warna(c.radar.kondisi)}`, position:'absolute',right:-18,top:-18}}>{c.radar.kondisi}</Badge>
+                            <Badge size={32} style={{fontSize:14, backgroundColor:`${warna(c.state.radar.kondisi)}`, position:'absolute',right:-18,top:-18}}>{c.state.radar.kondisi}</Badge>
                         </View>
                     )}
                 }
                 onPress={()=>{
-                    c.dispatch({type:'radar'})
+                    c.props.dispatch({type:'radar'})
                 }}
             />
             <List.Item
@@ -48,12 +47,12 @@ const isian = (c) =>{
                     return(
                         <View style={{flexDirection:"row"}}>
                             <List.Icon {...props} icon="chevron-right" />
-                            <Badge size={32} style={{fontSize:14, backgroundColor:`${warna(c.awos.kondisi)}`, position:'absolute',right:-18,top:-18}}>{c.awos.kondisi}</Badge>
+                            <Badge size={32} style={{fontSize:14, backgroundColor:`${warna(c.state.awos.kondisi)}`, position:'absolute',right:-18,top:-18}}>{c.state.awos.kondisi}</Badge>
                         </View>
                     )}
                 }
                 onPress={()=>{
-                    c.dispatch({type:'awos'})
+                    c.props.dispatch({type:'awos'})
                 }}
             />
             <List.Item
@@ -64,12 +63,12 @@ const isian = (c) =>{
                     return(
                         <View style={{flexDirection:"row"}}>
                             <List.Icon {...props} icon="chevron-right" />
-                            <Badge size={32} style={{fontSize:14, backgroundColor:`${warna(c.digitalisasi.kondisi)}`, position:'absolute',right:-18,top:-18}}>{c.digitalisasi.kondisi}</Badge>
+                            <Badge size={32} style={{fontSize:14, backgroundColor:`${warna(c.state.digitalisasi.kondisi)}`, position:'absolute',right:-18,top:-18}}>{c.state.digitalisasi.kondisi}</Badge>
                         </View>
                     )}
                 }
                 onPress={()=>{
-                    c.dispatch({type:'digitalisasi'})
+                    c.props.dispatch({type:'digitalisasi'})
                 }}
             />
             <List.Item
@@ -85,7 +84,7 @@ const isian = (c) =>{
                     )}
                 }
                 onPress={()=>{
-                    c.dispatch({type:'radiosonde'})
+                    c.props.dispatch({type:'radiosonde'})
                 }}
             />
         </View>
@@ -94,6 +93,7 @@ const isian = (c) =>{
 
 class Dashboard extends Component {
     state={
+        mama:'jaja',
         radar:this.props.state.data.filter( element => element.alat =="Radar")[this.props.state.data.filter( element => element.alat =="Radar").length-1],
         awos:this.props.state.data.filter( element => element.alat =="AWOS")[this.props.state.data.filter( element => element.alat =="AWOS").length-1],
         digitalisasi:this.props.state.data.filter( element => element.alat =="Digitalisasi")[this.props.state.data.filter( element => element.alat =="Digitalisasi").length-1],
@@ -116,7 +116,7 @@ class Dashboard extends Component {
                         </Dialog.Content>
                     </Dialog>
                 </Portal>
-                <Header judul={'Dashboard'} subjudul={this.props.state.data[0].statsiun} isi={isian(this.state)} navigasi={this.props.navigation}/>
+                <Header judul={'Dashboard'} subjudul={this.props.state.data[1].statsiun} isi={isian(this)} navigasi={this.props.navigation}/>
             </View>
         )
     }
