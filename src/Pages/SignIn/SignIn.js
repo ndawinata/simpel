@@ -57,13 +57,13 @@ export class SignIn extends Component {
                                         })
                                         .then((c)=>{
                                             // console.log(c.data.success)
-                                            
-                                            if (c.data.success==1){
-                                                this.props.updateValue({username:this.state.username})
-                                                this.props.updateValue({data:c.data.data})
-                                                return(this.props.navigation.navigate('MyDrawer'))
-                                            } else{
-                                                return(
+                                            switch(c.data.success) {
+                                                case 1:
+                                                    this.props.updateValue({username:this.state.username})
+                                                    this.props.updateValue({data:c.data.data})
+                                                    return(this.props.navigation.navigate('MyDrawer'))
+                                                    break;
+                                                default:
                                                     Alert.alert(
                                                         "Alert",
                                                         "Incorrect Username OR Password",
@@ -72,9 +72,7 @@ export class SignIn extends Component {
                                                         ],
                                                         { cancelable: false }
                                                     )
-                                                )
-                                            }
-                                            
+                                            } 
                                         })
                                     })
                             // this.props.navigation.navigate('MyDrawer')
