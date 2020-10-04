@@ -18,7 +18,14 @@ export class SignIn extends Component {
         return (
             <View style={{flex:1, backgroundColor:'#334753', resizeMode:'cover', justifyContent:"center"}} >
                 <StatusBar hidden={true} />
-                <Spinner visible={this.state.spinner} textContent={'Sign In'} textStyle={style.spinnerText} />
+                <Spinner 
+                    visible={this.state.spinner} 
+                    textContent={'Sign In'} 
+                    textStyle={style.spinnerText}
+                    cancelable={true}
+                    color={style.spinnerText}
+                    overlayColor={'rgba(0,0,0,0.7)'}
+                    />
                 <View style={{justifyContent:'center', alignItems:'center'}} >
                     <Image source={Logo} style={{width:190, height:96, marginLeft:50, marginBottom:50}} />
                     <TextInput 
