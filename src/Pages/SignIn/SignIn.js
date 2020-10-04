@@ -3,7 +3,7 @@ import { Text, View, Image, StatusBar, Dimensions, TextInput, StyleSheet, Toucha
 import Logo from '../../Assets/icons/Logo.png'
 import Axios from 'axios'
 import { GlobalConsumer } from '../../Component/Context/Context';
-
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -12,12 +12,13 @@ export class SignIn extends Component {
     state = {
         username:"",
         password:"",
-        val:0
+        spinner:false
     }
     render() {
         return (
             <View style={{flex:1, backgroundColor:'#334753', resizeMode:'cover', justifyContent:"center"}} >
                 <StatusBar hidden={true} />
+                <Spinner visible={this.state.spinner} textContent={'Sign In'} textStyle={style.spinnerText} />
                 <View style={{justifyContent:'center', alignItems:'center'}} >
                     <Image source={Logo} style={{width:190, height:96, marginLeft:50, marginBottom:50}} />
                     <TextInput 
@@ -44,60 +45,35 @@ export class SignIn extends Component {
                     <TouchableOpacity 
                         style={style.signin}
                         onPress={()=>{
-                            // login(this.state)
-                            
                             const body = {
                                 "username":this.state.username,
                                 "password":this.state.password
                             }
-                            // Axios.post('http://139.180.220.65:3000/api/users/login', body)
-                            //     .then((dat)=>{
-                            //         Axios.get(`http://139.180.220.65:3000/api/users/statsiun/${this.state.username}`, {
-                            //             headers:{'Authorization':`Bearer ${dat.data.token}`}
-                            //             })
-                            //             .then((c)=>{
-                            //                 // console.log(c.data.success)
-                            //                 switch(c.data.success) {
-                            //                     case 1:
-                            //                         this.props.updateValue({username:this.state.username})
-                            //                         this.props.updateValue({data:c.data.data})
-                            //                         return(this.props.navigation.navigate('MyDrawer'))
-                            //                         break;
-                            //                     default:
-                            //                         Alert.alert(
-                            //                             "Alert",
-                            //                             "Incorrect Username OR Password",
-                            //                             [
-                            //                                 { text: "OK" }
-                            //                             ],
-                            //                             { cancelable: false }
-                            //                         )
-                            //                 } 
-                            //             })
-                            //         })
-                                    Axios.get(`http://139.180.220.65:3000/api/users/statsiun/${this.state.username}`)
-                                        .then((c)=>{
-
-                                            // console.log(isNaN(c.data.data))
-                                            switch(c.data.success) {
-                                                case 1:
-                                                    this.props.updateValue({username:this.state.username})
-                                                    this.props.updateValue({data:c.data.data})
-                                                    this.props.navigation.navigate('MyDrawer')
-                                                    break;
-                                                default:
-                                                    Alert.alert(
-                                                        "Alert",
-                                                        "Incorrect Username OR Password",
-                                                        [
-                                                            { text: "OK" }
-                                                        ],
-                                                        { cancelable: false }
-                                                    )
-                                            } 
-
-                                        })
-                            // this.props.navigation.navigate('MyDrawer')
+                            this.props.updateValue({user:this.state.username})
+                            Axios.post('http://139.180.220.65:3000/api/users/login', body)
+                                .then((dat)=>{
+                                    this.setState({...this.state, spinner:true})
+                                    if(dat.data.success==1){
+                                        Axios.get(`http://139.180.220.65:3000/api/users/statsiun/${this.state.username}`)
+                                            .then((c)=>{
+                                                this.props.updateValue({data:c.data.data})
+                                                this.props.navigation.navigate('MyDrawer')
+                                                this.setState({...this.state, spinner:false})
+                                            })
+                                    }else{
+                                        Alert.alert(
+                                            "Alert",
+                                            "Incorrect Username OR Password",
+                                            [
+                                                { 
+                                                    text: "OK",
+                                                    onPress:()=>this.setState({...this.state, spinner:false})
+                                                }
+                                            ],
+                                                { cancelable: false }
+                                        )
+                                    }
+                                })
                         }}
                         >
                         <Text style={{fontSize:20}}>Sign In</Text>
@@ -109,6 +85,9 @@ export class SignIn extends Component {
 }
 
 const style = StyleSheet.create({
+    spinnerText:{
+        color:'#30BBBA'
+    },
     username:{
         fontSize:18, 
         height:40, 

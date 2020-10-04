@@ -21,11 +21,11 @@ const GlobalProvider = (Children) => {
                 dMerek:'',
                 dKondisi:'',
                 dTahun:'',
-                username:''
+                user:''
             }
             updateValue = (val) =>{
                 // this.setState({...this.state, coba:val.coba})
-                this.setState({...this.state, username:val.username})
+                this.setState({...this.state, user:val.user})
                 this.setState({...this.state, data:val.data})
             }
             dispatch = (action) =>{
@@ -78,10 +78,10 @@ const GlobalProvider = (Children) => {
                             ...this.state, 
                             alat:'Radiosonde', 
                             visible:true, 
-                            // dWaktu:moment(dat3.waktu).format('lll'),
-                            // dMerek:dat3.merek,
-                            // dKondisi:dat3.kondisi,
-                            // dTahun:dat3.tahun
+                            dWaktu:moment(dat3.waktu).format('lll'),
+                            dMerek:dat3.merek,
+                            dKondisi:dat3.kondisi,
+                            dTahun:dat3.tahun
                         })
                         break
                     default :
