@@ -12,18 +12,21 @@ const Isian = (props) =>{
         <View>
             <ScrollView >
                 <TextInput
+                    onChangeText = {text => props.isiState.setState({...props.isiState.state, lokasi:text})} 
                     mode={"outlined"}
                     style={{marginVertical:3}}
                     label="Lokasi" 
                     value={props.lokasi}
                     placeholder="Lokasi Stasiun"/>
                 <TextInput
+                    onChangeText = {text => props.isiState.setState({...props.isiState.state, merek:text})} 
                     mode={"outlined"}
                     style={{marginVertical:3}}
                     label="Merek" 
                     value={props.merek}
                     placeholder="Merek Alat"/>
                 <TextInput
+                    onChangeText = {text => props.isiState.setState({...props.isiState.state, tahun:text})} 
                     mode={"outlined"}
                     style={{marginVertical:3}}
                     label="Tahun" 
@@ -56,15 +59,19 @@ const Isian = (props) =>{
                         "kondisi": props.isiState.state.kondisi,
                         "catatan": props.isiState.state.catatan
                     }
-                    console.log(body)
                     Axios.post(`http://139.180.220.65:3000/api/users/statsiun/add`, body)
                         .then((c)=>{
-                            console.log(c.data.success)
+                            // console.log(c.data.success)
                             if(c.data.success==1){
-                                Axios.get(`http://139.180.220.65:3000/api/users/statsiun/soekarnohatta`)
-                                    .then((dat)=>{
-                                        props.isiState.props.updateValue({data:dat.data.data})
-                                    })
+                                let up = props.isiState.props.state.update
+                                let tgl = moment().format('dddd, D MMMM YYYY  |  h:mm A')
+                                let altUp = 'AWOS Update'
+                                let isiUp = {
+                                    alat:altUp,
+                                    tgl:tgl
+                                }
+                                up.push(isiUp)
+                                props.isiState.setState({updt:up})
                                 Alert.alert(
                                     "Success",
                                     "Sukses Menambahkan Data",
@@ -85,6 +92,9 @@ const Isian = (props) =>{
                             }
                             
                         })
+                        .then(()=>{
+                            console.log(props.isiState.props.state.update)
+                        })
                 }} >
                     Kirim
                 </Button>
@@ -95,19 +105,19 @@ const Isian = (props) =>{
 
 class Awos extends Component {
     state={
-        subjudul:this.props.state.data[0].statsiun,
-        lokasi:"Stasiun Meteorologi Kls I Soekarno-Hatta",
-        merek:"Coastal",
-        tahun:"2009",
+        lokasi:this.props.state.data[1].statsiun,
+        merek:this.props.state.data[1].merek,
+        tahun:this.props.state.data[1].tahun,
         kondisi:"",
         catatan:"",
+        url:`http://139.180.220.65:3000/api/users/statsiun/${this.props.state.user}`
     }
     render() {
         return (
             <View>
                 <Header 
                     judul="AWOS" 
-                    subjudul={this.state.subjudul}
+                    subjudul={this.state.lokasi}
                     isi={<Isian 
                         lokasi={this.state.lokasi} 
                         merek={this.state.merek} 

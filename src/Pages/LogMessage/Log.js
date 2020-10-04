@@ -1,36 +1,68 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View } from 'react-native'
+import { Text, StyleSheet, View, RefreshControl, ScrollView } from 'react-native'
 import Header from '../../Component/Navbar/Header/Header'
 import { Card, Title, Paragraph } from 'react-native-paper';
+import moment from 'moment'
+import { GlobalConsumer } from '../../Component/Context/Context';
 
-const isian = () =>{
+const IsiCard = (val) => {
     return(
-        <View>
-            <Text style={{fontWeight:"bold", fontSize:16, textAlign:"center", margin:10}}>Tuesday, 2 January 2020</Text>
-            <Card style={{margin:3}}>
-                <Card.Content>
-                    <Title>Radar Cuaca Update</Title>
-                    <Paragraph>Tuesday, 2 January 2020</Paragraph>
-                </Card.Content>
-            </Card>
-            <Card style={{margin:3}}>
-                <Card.Content>
-                    <Title>Awos Update</Title>
-                    <Paragraph>Friday, 7 January 2020</Paragraph>
-                </Card.Content>
-            </Card>
-        </View>
+        <Card style={{margin:2.7}}>
+            <Card.Content>
+                <Title>{val.alat}</Title>
+                <Paragraph>{val.tanggal}</Paragraph>
+            </Card.Content>
+        </Card>
     )
 }
 
-export default class Log extends Component {
+const HandleIsi = (val) => {
+    return val.data.map((data, index)=>{
+        return <IsiCard key={index} alat={data.alat} tanggal={data.tgl} />
+    })
+}
+
+const isian = (c) =>{
+    console.log(c.state)
+    return(
+        <ScrollView
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+                <RefreshControl refreshing={c.state.refreshing} onRefresh={c._onRefresh.bind(c)} />
+            } 
+            >
+            <Text style={{fontWeight:"bold", fontSize:16, textAlign:"center", margin:10}}>{moment().format('dddd, D MMMM YYYY')}</Text>
+            <HandleIsi data={c.state.update} />
+        </ScrollView>
+    )
+}
+
+class Log extends Component {
+    state={
+        update:this.props.state.update,
+        refreshing:false,
+        lokasi:this.props.state.data[0].statsiun
+    }
+
+    _onRefresh() {
+        this.setState({...this.state, refreshing: true});
+        this.setState({...this.state, update:this.props.state.update})
+        setTimeout(()=>this.setState({...this.state, refreshing: false}),2000)
+    }
+
     render() {
         return (
             <View>
-                <Header judul="Log Message" subjudul="Stamet Soetta" isi={isian()} navigasi={this.props.navigation}/>
+                <Header 
+                    judul="Log Message" 
+                    subjudul={this.state.lokasi} 
+                    isi={isian(this)} 
+                    navigasi={this.props.navigation}/>
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({})
+
+export default GlobalConsumer(Log)

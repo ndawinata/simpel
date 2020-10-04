@@ -21,13 +21,18 @@ const GlobalProvider = (Children) => {
                 dMerek:'',
                 dKondisi:'',
                 dTahun:'',
-                user:''
+                user:'',
+                update:[]
             }
             updateValue = (val) =>{
                 // this.setState({...this.state, coba:val.coba})
-                this.setState({...this.state, user:val.user})
-                this.setState({...this.state, data:val.data})
+                this.setState({...this.state, data:val.data, user:val.user})
             }
+
+            updateNotif = (val) =>{
+                this.setState({...this.state, update:val.updt})
+            }
+
             dispatch = (action) =>{
                 switch(action.type){
                     case 'coba':
@@ -100,7 +105,8 @@ const GlobalProvider = (Children) => {
                         {
                             state:this.state,
                             dispatch:this.dispatch,
-                            updateValue:this.updateValue
+                            updateValue:this.updateValue,
+                            updateNotif:this.updateNotif
                         }
                     }>
                         <Children {...this.props} />

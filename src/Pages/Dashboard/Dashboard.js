@@ -7,16 +7,21 @@ import moment from 'moment'
 import Axios from 'axios'
 
 const warna = (c) =>{
-    switch(c) {
-        case 'ON':
-            return('green')
-            break;
-        case 'OFF':
-            return('red')
-            break;
-        default:
-            return('red')
-    } 
+    if(c=='ON'){
+        return('green')
+    }else{
+        return('red')
+    }
+    // switch(c) {
+    //     case 'ON':
+    //         return('green')
+    //         break;
+    //     case 'OFF':
+    //         return('red')
+    //         break;
+    //     default:
+    //         return('red')
+    // } 
 }
 
 const isian = (c) =>{
@@ -24,10 +29,11 @@ const isian = (c) =>{
     // console.log(c.state)
     return(
         <ScrollView 
-                refreshControl={
-                    <RefreshControl refreshing={c.state.refreshing} onRefresh={c._onRefresh.bind(c)} />
-                } 
-                >
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+                <RefreshControl refreshing={c.state.refreshing} onRefresh={c._onRefresh.bind(c)} />
+            } 
+            >
             <View style={{marginHorizontal:10}}>
                     <Text style={styles.tanggal}>{moment().format('dddd, D MMMM YYYY')}</Text>
                     <List.Item
@@ -101,6 +107,7 @@ const isian = (c) =>{
 
 class Dashboard extends Component {
     state={
+        url:`http://139.180.220.65:3000/api/users/statsiun/${this.props.state.user}`,
         refreshing:false,
         subjudul:this.props.state.data[0].statsiun,
         radar:this.props.state.data.filter( element => element.alat =="Radar")[this.props.state.data.filter( element => element.alat =="Radar").length-1],
@@ -112,18 +119,16 @@ class Dashboard extends Component {
 
     _onRefresh() {
         this.setState({...this.state, refreshing: true});
-        console.log(this.props.state.user)
-        Axios.get(`http://139.180.220.65:3000/api/users/statsiun/soekarnohatta`)
+        Axios.get(this.state.url)
             .then((dat)=>{
+                const value = dat.data.data
                 this.props.updateValue({data:dat.data.data})
-                this.setState({...this.state, awos:this.props.state.data.filter( element => element.alat =="Radiosonde")[this.props.state.data.filter( element => element.alat =="Radiosonde").length-1]})
-
-                // this.setState({...this.state, refreshing: false})
-            })
-            .then((dat)=>{
-                this.setState({...this.state, radiosonde:this.props.state.data.filter( element => element.alat =="Radiosonde")[this.props.state.data.filter( element => element.alat =="Radiosonde").length-1]})
-
+                this.setState({...this.state, awos:value.filter( element => element.alat =="AWOS")[value.filter( element => element.alat =="AWOS").length-1]})
+                this.setState({...this.state, radar:value.filter( element => element.alat =="Radar")[value.filter( element => element.alat =="Radar").length-1]})
+                this.setState({...this.state, digitalisasi:value.filter( element => element.alat =="Digitalisasi")[value.filter( element => element.alat =="Digitalisasi").length-1]})
+                this.setState({...this.state, radiosonde:value.filter( element => element.alat =="Radiosonde")[value.filter( element => element.alat =="Radiosonde").length-1]})
                 this.setState({...this.state, refreshing: false})
+                
             })
     }
 

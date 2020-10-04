@@ -49,14 +49,15 @@ export class SignIn extends Component {
                                 "username":this.state.username,
                                 "password":this.state.password
                             }
-                            this.props.updateValue({user:this.state.username})
+                            // this.props.updateValue({user:this.state.username})
                             Axios.post('http://139.180.220.65:3000/api/users/login', body)
                                 .then((dat)=>{
+                                    // this.props.updateUser({user:this.state.username})
                                     this.setState({...this.state, spinner:true})
                                     if(dat.data.success==1){
                                         Axios.get(`http://139.180.220.65:3000/api/users/statsiun/${this.state.username}`)
                                             .then((c)=>{
-                                                this.props.updateValue({data:c.data.data})
+                                                this.props.updateValue({data:c.data.data, user:this.state.username})
                                                 this.props.navigation.navigate('MyDrawer')
                                                 this.setState({...this.state, spinner:false})
                                             })
