@@ -55,12 +55,11 @@ const Isian = (props) =>{
 
 export default class Radiosonde extends Component {
     state={
-        lokasi:"Stasiun Meteorologi Soekarno Hatta",
+        lokasi:"Stasiun Meteorologi Kls I Soekarno-Hatta",
         merek:"EEC",
         tahun:"2009",
         kondisi:"",
         catatan:"",
-        foto:""
     }
     render() {
         return (
@@ -74,7 +73,7 @@ export default class Radiosonde extends Component {
                         thn={this.state.tahun} 
                         kondisi={this.state.kondisi} 
                         catatan={this.state.catatan} 
-                        foto={this.state.foto} />} 
+                        />} 
                     navigasi={this.props.navigation}/>
             </View>
         )

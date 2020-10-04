@@ -28,7 +28,7 @@ function CustomDrawerContent(props) {
         <Avatar.Image source={require('../../../Assets/img/BMKG.png')} size={90} style={{margin:20}} />
        </View>
        <View style={{alignItems:"center", marginBottom:20}}>
-        <Text style={{color:"#fff", letterSpacing:1}}>Stamet Soetta</Text>
+        <Text style={{color:"#fff", textAlign:'center'}}>Stasiun Meteorologi Kls I Soekarno-Hatta</Text>
        </View>
       <DrawerItemList {...props} />
       <Button onPress={()=>props.navigation.navigate('SignIn')} style={{marginTop:25, marginHorizontal:20}} mode="contained" color="#30BBBA" icon="logout" title="Logout">Logout</Button>

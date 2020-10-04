@@ -50,18 +50,40 @@ export class SignIn extends Component {
                                 "username":this.state.username,
                                 "password":this.state.password
                             }
-                            Axios.post('http://139.180.220.65:3000/api/users/login', body)
-                                .then((dat)=>{
-                                    Axios.get(`http://139.180.220.65:3000/api/users/statsiun/${this.state.username}`, {
-                                        headers:{'Authorization':`Bearer ${dat.data.token}`}
-                                        })
+                            // Axios.post('http://139.180.220.65:3000/api/users/login', body)
+                            //     .then((dat)=>{
+                            //         Axios.get(`http://139.180.220.65:3000/api/users/statsiun/${this.state.username}`, {
+                            //             headers:{'Authorization':`Bearer ${dat.data.token}`}
+                            //             })
+                            //             .then((c)=>{
+                            //                 // console.log(c.data.success)
+                            //                 switch(c.data.success) {
+                            //                     case 1:
+                            //                         this.props.updateValue({username:this.state.username})
+                            //                         this.props.updateValue({data:c.data.data})
+                            //                         return(this.props.navigation.navigate('MyDrawer'))
+                            //                         break;
+                            //                     default:
+                            //                         Alert.alert(
+                            //                             "Alert",
+                            //                             "Incorrect Username OR Password",
+                            //                             [
+                            //                                 { text: "OK" }
+                            //                             ],
+                            //                             { cancelable: false }
+                            //                         )
+                            //                 } 
+                            //             })
+                            //         })
+                                    Axios.get(`http://139.180.220.65:3000/api/users/statsiun/${this.state.username}`)
                                         .then((c)=>{
-                                            // console.log(c.data.success)
+
+                                            // console.log(isNaN(c.data.data))
                                             switch(c.data.success) {
                                                 case 1:
                                                     this.props.updateValue({username:this.state.username})
                                                     this.props.updateValue({data:c.data.data})
-                                                    return(this.props.navigation.navigate('MyDrawer'))
+                                                    this.props.navigation.navigate('MyDrawer')
                                                     break;
                                                 default:
                                                     Alert.alert(
@@ -73,8 +95,8 @@ export class SignIn extends Component {
                                                         { cancelable: false }
                                                     )
                                             } 
+
                                         })
-                                    })
                             // this.props.navigation.navigate('MyDrawer')
                         }}
                         >

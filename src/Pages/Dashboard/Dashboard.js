@@ -3,6 +3,7 @@ import { Text, StyleSheet, View } from 'react-native'
 import Header from '../../Component/Navbar/Header/Header'
 import { List, Badge, Button, Paragraph, Dialog, Portal } from 'react-native-paper';
 import { GlobalConsumer } from '../../Component/Context/Context';
+import moment from 'moment'
 
 const warna = (c) =>{
     switch(c) {
@@ -22,7 +23,7 @@ const isian = (c) =>{
     // console.log(c.state)
     return(
         <View style={{marginHorizontal:10}}>
-            <Text style={styles.tanggal}>Tuesday, 2 January 2020</Text>
+            <Text style={styles.tanggal}>{moment().format('dddd, D MMMM YYYY')}</Text>
             <List.Item
                 title="Radar Cuaca"
                 titleStyle={styles.alat}
@@ -94,13 +95,18 @@ const isian = (c) =>{
 class Dashboard extends Component {
     state={
         mama:'jaja',
+        subjudul:this.props.state.data[0].statsiun,
         radar:this.props.state.data.filter( element => element.alat =="Radar")[this.props.state.data.filter( element => element.alat =="Radar").length-1],
         awos:this.props.state.data.filter( element => element.alat =="AWOS")[this.props.state.data.filter( element => element.alat =="AWOS").length-1],
         digitalisasi:this.props.state.data.filter( element => element.alat =="Digitalisasi")[this.props.state.data.filter( element => element.alat =="Digitalisasi").length-1],
         // radiosonde:this.props.state.data.filter( element => element.alat =="Radar")[this.props.state.data.filter( element => element.alat =="Radar").length-1]
         // radiosonde:this.props.state.data.filter( element => element.alat =="Radar")[this.props.state.data.filter( element => element.alat =="Radar").length-1]
     }
-    
+    componentDidMount(){
+        setInterval(()=>{
+            this.setState({...this.state, awos:this.props.state.data.filter( element => element.alat =="AWOS")[this.props.state.data.filter( element => element.alat =="AWOS").length-1]})
+        },15000)
+    }
     render() {
         
         return (
@@ -116,7 +122,7 @@ class Dashboard extends Component {
                         </Dialog.Content>
                     </Dialog>
                 </Portal>
-                <Header judul={'Dashboard'} subjudul={this.props.state.data[1].statsiun} isi={isian(this)} navigasi={this.props.navigation}/>
+                <Header judul={'Dashboard'} subjudul={this.state.subjudul} isi={isian(this)} navigasi={this.props.navigation}/>
             </View>
         )
     }

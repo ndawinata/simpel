@@ -1,9 +1,13 @@
 import React, { Component, useState } from 'react'
-import { Text, StyleSheet, View, ScrollView } from 'react-native'
+import { Text, StyleSheet, View, ScrollView, Alert } from 'react-native'
 import Header from '../../Component/Navbar/Header/Header'
 import { TextInput, Button } from 'react-native-paper';
+import moment from 'moment'
+import Axios from 'axios'
+import { GlobalConsumer } from '../../Component/Context/Context';
 
 const Isian = (props) =>{
+    // console.log(props.isiState.state)
     return(
         <View>
             <ScrollView >
@@ -26,26 +30,62 @@ const Isian = (props) =>{
                     value={props.thn}
                     placeholder="Tahun Pembelian"/>
                 <TextInput
+                    onChangeText = {text => props.isiState.setState({...props.isiState.state, kondisi:text})} 
                     mode={"outlined"}
                     style={{marginVertical:3}}
                     label="Kondisi" 
                     value={props.kondisi}
                     placeholder="ON atau OFF"/>
                 <TextInput
+                    onChangeText = {text => props.isiState.setState({...props.isiState.state, catatan:text})} 
                     mode={"outlined"}
                     multiline={true}
                     numberOfLines={3}
                     style={{marginVertical:3}}
                     label="Catatan" 
-                    value={props.kondisi}
+                    value={props.catatan}
                     placeholder="Catatan"/>
-                <TextInput
-                    mode={"outlined"}
-                    style={{marginVertical:3}}
-                    label="Foto" 
-                    value={props.kondisi}
-                    placeholder="Foto Alat"/>
-                <Button color={"#334753"} icon="send" mode="contained" style={{marginVertical:25}}>
+                
+                <Button color={"#334753"} icon="send" mode="contained" style={{marginVertical:25}} onPress={()=>{
+                    const body = {
+                        "waktu": moment().format(),
+                        "statsiun": props.isiState.state.lokasi,
+                        "alat": "AWOS",
+                        "merek": props.isiState.state.merek,
+                        "tahun": props.isiState.state.tahun,
+                        "kondisi": props.isiState.state.kondisi,
+                        "catatan": props.isiState.state.catatan
+                    }
+                    console.log(body)
+                    Axios.post(`http://139.180.220.65:3000/api/users/statsiun/add`, body)
+                        .then((c)=>{
+                            console.log(c.data.success)
+                            if(c.data.success==1){
+                                Axios.get(`http://139.180.220.65:3000/api/users/statsiun/soekarnohatta`)
+                                    .then((dat)=>{
+                                        props.isiState.props.updateValue({data:dat.data.data})
+                                    })
+                                Alert.alert(
+                                    "Success",
+                                    "Sukses Menambahkan Data",
+                                    [
+                                        { text: "OK" }
+                                    ],
+                                    { cancelable: false }
+                                )
+                            }else{
+                                Alert.alert(
+                                    "Failed",
+                                    "Gagal Menambahkan Data",
+                                    [
+                                        { text: "OK" }
+                                    ],
+                                    { cancelable: false }
+                                )
+                            }
+                            
+                        })
+                }} >
                     Kirim
                 </Button>
             </ScrollView>
@@ -53,28 +93,29 @@ const Isian = (props) =>{
     )
 }
 
-export default class Awos extends Component {
+class Awos extends Component {
     state={
-        lokasi:"Stasiun Meteorologi Soekarno Hatta",
-        merek:"EEC",
+        subjudul:this.props.state.data[0].statsiun,
+        lokasi:"Stasiun Meteorologi Kls I Soekarno-Hatta",
+        merek:"Coastal",
         tahun:"2009",
         kondisi:"",
         catatan:"",
-        foto:""
     }
     render() {
         return (
             <View>
                 <Header 
                     judul="AWOS" 
-                    subjudul="Stamet Soetta" 
+                    subjudul={this.state.subjudul}
                     isi={<Isian 
                         lokasi={this.state.lokasi} 
                         merek={this.state.merek} 
                         thn={this.state.tahun} 
                         kondisi={this.state.kondisi} 
-                        catatan={this.state.catatan} 
-                        foto={this.state.foto} />} 
+                        catatan={this.state.catatan}
+                        isiState={this}
+                        />} 
                     navigasi={this.props.navigation}/>
             </View>
         )
@@ -82,3 +123,5 @@ export default class Awos extends Component {
 }
 
 const styles = StyleSheet.create({})
+
+export default GlobalConsumer(Awos)
